@@ -53,7 +53,11 @@ class ComplaintController extends Controller
     {
     //    $var;
     //    dd('stop here', $var);
-      return view('complaint.edit');
+      return view('complaint.edit',[
+        
+        'complaint' => $complaint
+      
+      ]);
     }
 
     /**
@@ -61,7 +65,21 @@ class ComplaintController extends Controller
      */
     public function update(UpdateComplaintRequest $request, Complaint $complaint)
     {
-        //
+       // dd($request->all());
+       // 1.  Validate form data
+       $request->validate([
+        'title' => ['required', 'max:100'],
+        'description' => ['required']
+       ]);
+       // 2.  Update data
+       $complaint -> update([
+        'title' => $request->input('title'),
+        'description' => $request->input('description')
+       ]);
+      
+       // 3. Redirect user to another page
+        return back()->with('success', 'Record updated successfully.');
+        // return to_route('complaint.index')->with('success', 'Record updated successfully.');
     }
 
     /**
